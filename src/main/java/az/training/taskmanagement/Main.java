@@ -1,16 +1,16 @@
 package az.training.taskmanagement;
 
+import az.training.taskmanagement.controller.CategoryController;
 import az.training.taskmanagement.controller.TaskController;
 import az.training.taskmanagement.controller.UserController;
-import az.training.taskmanagement.dto.CreateTaskRequest;
-import az.training.taskmanagement.dto.CreateUserRequest;
-import az.training.taskmanagement.dto.UpdateTaskRequest;
-import az.training.taskmanagement.dto.UserResponse;
+import az.training.taskmanagement.dto.*;
 import az.training.taskmanagement.exception.DuplicateResourceException;
 import az.training.taskmanagement.model.Priority;
 import az.training.taskmanagement.model.TaskStatus;
+import az.training.taskmanagement.repository.CategoryRepository;
 import az.training.taskmanagement.repository.TaskRepository;
 import az.training.taskmanagement.repository.UserRepository;
+import az.training.taskmanagement.service.CategoryService;
 import az.training.taskmanagement.service.TaskService;
 import az.training.taskmanagement.service.UserService;
 
@@ -27,20 +27,28 @@ public class Main {
         // 1) Repository qatı (in-memory implementasiya)
         UserRepository userRepository = new UserRepository();
         TaskRepository taskRepository = new TaskRepository();
+        CategoryRepository categoryRepository = new CategoryRepository();
 
         // 2) Service qatı (business logic) - yalnız interface-dən asılıdır
         UserService userService = new UserService(userRepository);
+        CategoryService categoryService = new CategoryService(categoryRepository);
         TaskService taskService = new TaskService(taskRepository, userRepository);
 
         // 3) Controller qatı (boundary)
         UserController userController = new UserController(userService, taskService);
         TaskController taskController = new TaskController(taskService);
+        CategoryController categoryController = new CategoryController(categoryService);
 
         System.out.println("=== Task Management API - Lesson 2 (layered) ===\n");
 
         UserResponse darya = userController.create(new CreateUserRequest("Darya", "darya@example.com"));
         UserResponse ali = userController.create(new CreateUserRequest("Ali", "ali@example.com"));
         System.out.println("User-lər: " + userController.getAll());
+
+
+        CategoryResponse backend = categoryController.create(new CreateCategoryRequest("Backend"));
+        System.out.println("\nCategory-lər: " + categoryController.getAll());
+
 
         taskController.create(new CreateTaskRequest("Layered refactor", "controller/service/repo", Priority.HIGH, darya.id()));
         var t2 = taskController.create(new CreateTaskRequest("DTO mapping öyrən", null, Priority.MEDIUM, darya.id()));
