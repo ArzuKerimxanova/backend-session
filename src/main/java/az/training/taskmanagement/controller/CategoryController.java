@@ -2,6 +2,7 @@ package az.training.taskmanagement.controller;
 
 import az.training.taskmanagement.dto.CategoryResponse;
 import az.training.taskmanagement.dto.CreateCategoryRequest;
+import az.training.taskmanagement.dto.UpdateCategoryRequest;
 import az.training.taskmanagement.service.CategoryService;
 
 import java.util.List;
@@ -27,6 +28,12 @@ public class CategoryController {
     // GET /categories/{id}
     public CategoryResponse getById(Long id) {
         return categoryService.getCategoryById(id);
+    }
+
+
+    // PATCH /categories/{id}
+    public CategoryResponse update(Long id, UpdateCategoryRequest request) {
+        return categoryService.updateCategory(id, request);
     }
 
     // DELETE /categories/{id}

@@ -2,6 +2,7 @@ package az.training.taskmanagement.service;
 
 import az.training.taskmanagement.dto.CategoryResponse;
 import az.training.taskmanagement.dto.CreateCategoryRequest;
+import az.training.taskmanagement.dto.UpdateCategoryRequest;
 import az.training.taskmanagement.exception.DuplicateResourceException;
 import az.training.taskmanagement.exception.ResourceNotFoundException;
 import az.training.taskmanagement.exception.ValidationException;
@@ -43,6 +44,24 @@ public class CategoryService {
 
     public boolean existsById(Long id) {
         return id != null && categoryRepository.findById(id).isPresent();
+    }
+
+
+    public CategoryResponse updateCategory(Long id, UpdateCategoryRequest request) {
+        Category category = findCategoryOrThrow(id);
+
+        if (request.name() != null) {
+            if (request.name().isBlank()) {
+                throw new ValidationException("Category name cannot be empty");
+            }
+            boolean nameChanged = !request.name().equalsIgnoreCase(category.getName());
+            if (nameChanged && categoryRepository.existsByName(request.name())) {
+                throw new DuplicateResourceException("Category with name " + request.name() + " already exists");
+            }
+            category.setName(request.name());
+        }
+
+        return CategoryMapper.toResponse(categoryRepository.save(category));
     }
 
     public void deleteCategory(Long id) {

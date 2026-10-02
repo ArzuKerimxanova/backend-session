@@ -32,7 +32,7 @@ public class Main {
         // 2) Service qatı (business logic) - yalnız interface-dən asılıdır
         UserService userService = new UserService(userRepository);
         CategoryService categoryService = new CategoryService(categoryRepository);
-        TaskService taskService = new TaskService(taskRepository, userRepository);
+        TaskService taskService = new TaskService(taskRepository, userRepository,categoryRepository);
 
         // 3) Controller qatı (boundary)
         UserController userController = new UserController(userService, taskService);
