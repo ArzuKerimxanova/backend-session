@@ -50,11 +50,8 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    // --- Bütün servislərdə istifadə olunan eyni "findOrThrow" pattern-i ---
+
     private Category findCategoryOrThrow(Long id) {
-        if (id == null) {
-            throw new ValidationException("Category id cannot be null");
-        }
         return categoryRepository.findById(id)
                 .orElseThrow(() -> ResourceNotFoundException.of("Category", id));
     }

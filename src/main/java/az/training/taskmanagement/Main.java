@@ -50,13 +50,13 @@ public class Main {
         System.out.println("\nCategory-lər: " + categoryController.getAll());
 
 
-        taskController.create(new CreateTaskRequest("Layered refactor", "controller/service/repo", Priority.HIGH, darya.id()));
-        var t2 = taskController.create(new CreateTaskRequest("DTO mapping öyrən", null, Priority.MEDIUM, darya.id()));
-        taskController.create(new CreateTaskRequest("SOLID təkrar", null, Priority.LOW, ali.id()));
+        taskController.create(new CreateTaskRequest("Layered refactor", "controller/service/repo", Priority.HIGH, darya.id(),backend.id()));
+        var t2 = taskController.create(new CreateTaskRequest("DTO mapping öyrən", null, Priority.MEDIUM, darya.id(),backend.id()));
+        taskController.create(new CreateTaskRequest("SOLID təkrar", null, Priority.LOW, ali.id(),null));
         System.out.println("\nDarya-nın task-ları: " + userController.getUserTasks(darya.id()));
 
         // PATCH nümunəsi (yalnız status dəyişir)
-        taskController.update(t2.id(), new UpdateTaskRequest(null, null, TaskStatus.DONE, null));
+        taskController.update(t2.id(), new UpdateTaskRequest(null, null, TaskStatus.DONE, null,null));
         System.out.println("\nYenilənmiş task: " + taskController.getById(t2.id()));
 
         // Xəta ssenarisi
