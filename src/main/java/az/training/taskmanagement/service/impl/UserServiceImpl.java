@@ -42,6 +42,14 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponse(findUserOrThrow(id));
     }
 
+
+    @Override
+    public UserResponse getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(UserMapper::toResponse)
+                .orElseThrow(() -> ResourceNotFoundException.of("User", username));
+    }
+
     @Override
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()

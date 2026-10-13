@@ -41,6 +41,14 @@ public class InMemoryUserRepository implements UserRepository {
                 .anyMatch(u -> u.getEmail() != null && u.getEmail().equalsIgnoreCase(email));
     }
 
+
+    @Override
+    public Optional<User> findByUsername(String name) {
+        return storage.values().stream()
+                .filter(u -> u.getName() != null && u.getName().equalsIgnoreCase(name))
+                .findFirst();
+    }
+
     @Override
     public void deleteById(Long id) {
         storage.remove(id);

@@ -13,11 +13,11 @@ import java.util.List;
 
 /**
  * User REST controller.
- *
+ * <p>
  * Lesson 2-dəki sadə class-a HTTP annotasiyaları əlavə edildi:
- *  - @RestController: hər metodun qaytardığı obyekt JSON-a çevrilir.
- *  - @RequestMapping("/users"): bu controller-in baza yolu.
- *  - Dependency-lər constructor ilə Spring tərəfindən inject olunur.
+ * - @RestController: hər metodun qaytardığı obyekt JSON-a çevrilir.
+ * - @RequestMapping("/users"): bu controller-in baza yolu.
+ * - Dependency-lər constructor ilə Spring tərəfindən inject olunur.
  */
 @RestController
 @RequestMapping("/users")
@@ -45,6 +45,11 @@ public class UserController {
     @GetMapping
     public List<UserResponse> getAll() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/search")
+    public UserResponse getUserByUsername(@RequestParam String username) {
+        return userService.getUserByUsername(username);
     }
 
     @GetMapping("/{id}/tasks")
