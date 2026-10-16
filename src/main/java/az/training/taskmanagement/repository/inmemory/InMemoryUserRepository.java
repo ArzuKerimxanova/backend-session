@@ -3,10 +3,7 @@ package az.training.taskmanagement.repository.inmemory;
 import az.training.taskmanagement.model.User;
 import az.training.taskmanagement.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -43,11 +40,19 @@ public class InMemoryUserRepository implements UserRepository {
 
 
     @Override
-    public Optional<User> findByUsername(String name) {
-        return storage.values().stream()
-                .filter(u -> u.getName() != null && u.getName().equalsIgnoreCase(name))
-                .findFirst();
+    public List<User> findByName(String name) {
+        return storage.values().stream().
+                filter(user -> user.getName() != null
+                        && user.getName().equalsIgnoreCase(name))
+                .toList();
     }
+//
+//    @Override
+//    public Optional<User> findByUsername(String name) {
+//        return storage.values().stream()
+//                .filter(u -> u.getName() != null && u.getName().equalsIgnoreCase(name))
+//                .findFirst();
+//    }
 
     @Override
     public void deleteById(Long id) {

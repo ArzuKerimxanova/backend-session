@@ -1,6 +1,7 @@
 package az.training.taskmanagement.service.impl;
 
 import az.training.taskmanagement.dto.CreateUserRequest;
+import az.training.taskmanagement.dto.PageResponse;
 import az.training.taskmanagement.dto.UserResponse;
 import az.training.taskmanagement.exception.DuplicateResourceException;
 import az.training.taskmanagement.exception.ResourceNotFoundException;
@@ -16,6 +17,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private static final int MAX_PAGE_SIZE = 100;
 
     // Constructor injection - dependency yalnız interface-dir.
     public UserServiceImpl(UserRepository userRepository) {
@@ -43,12 +45,32 @@ public class UserServiceImpl implements UserService {
     }
 
 
+//    @Override
+//    public UserResponse getUserByUsername(String username) {
+//        return userRepository.findByUsername(username)
+//                .map(UserMapper::toResponse)
+//                .orElseThrow(() -> ResourceNotFoundException.of("User", username));
+//    }
+
+
     @Override
-    public UserResponse getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
+    public PageResponse<UserResponse> getUsersByName(String name, int page, int size) {
+        if (page < 0) {
+            throw new ValidationException("page mənfi ola bilməz");
+        }
+        if (size < 1 || size > MAX_PAGE_SIZE) {
+            throw new ValidationException("size 1 ilə " + MAX_PAGE_SIZE + " arasında olmalıdır");
+        }
+
+        List<UserResponse> filtered = (name == null || name.isBlank())
+                ? getAllUsers()
+                : userRepository.findByName(name).stream()
                 .map(UserMapper::toResponse)
-                .orElseThrow(() -> ResourceNotFoundException.of("User", username));
+                .toList();
+
+        return PageResponse.of(filtered, page, size);
     }
+
 
     @Override
     public List<UserResponse> getAllUsers() {
